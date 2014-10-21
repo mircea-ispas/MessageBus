@@ -52,16 +52,16 @@ void Test_ConnectionClose()
 void Test_ObservableDeleted()
 {
     Connection connection;
-    assert(connection.IsEmpty());
+    assert(connection.IsDetached());
 
     {
         BaseObservable<int> observable;
         connection = observable.AddObserver([](const int&){});
 
-        assert(!connection.IsEmpty());
+        assert(!connection.IsDetached());
     }
 
-    assert(connection.IsEmpty());
+    assert(connection.IsDetached());
 }
 
 int main(int argc, const char * argv[])

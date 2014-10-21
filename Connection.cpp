@@ -7,14 +7,20 @@ Connection::Connection(Connection&& rhs)
     rhs.m_closeConnection = nullptr;
     rhs.m_updateConnection = nullptr;
 
-    m_updateConnection(this);
+    if(m_updateConnection)
+    {
+        m_updateConnection(this);
+    }
 }
 
 Connection::Connection(std::function<void()> close, std::function<void(Connection*)> update)
     : m_closeConnection(close)
     , m_updateConnection(update)
 {
-    m_updateConnection(this);
+    if(m_updateConnection)
+    {
+        m_updateConnection(this);
+    }
 }
 
 Connection::~Connection()
@@ -28,7 +34,11 @@ Connection& Connection::operator=(Connection&& rhs)
 
     m_closeConnection = rhs.m_closeConnection;
     m_updateConnection = rhs.m_updateConnection;
-    m_updateConnection(this);
+
+    if(m_updateConnection)
+    {
+        m_updateConnection(this);
+    }
 
     rhs.m_closeConnection = nullptr;
     rhs.m_updateConnection = nullptr;
@@ -46,7 +56,7 @@ void Connection::Close()
     }
 }
 
-bool Connection::IsEmpty() const
+bool Connection::IsDetached()
 {
     return m_closeConnection == nullptr;
 }

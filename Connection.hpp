@@ -14,7 +14,7 @@ class Connection
         Connection&                         operator=(const Connection&) = delete;
 
         void                                Close();
-        bool                                IsEmpty() const;
+        bool                                IsDetached();
 
     private:
         Connection(std::function<void()> close, std::function<void(Connection*)> update);
