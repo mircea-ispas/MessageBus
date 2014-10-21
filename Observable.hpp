@@ -10,11 +10,11 @@ class BaseObservable
 {
     public:
         BaseObservable() = default;
-        BaseObservable(BaseObservable&&);
+        BaseObservable(BaseObservable&&) = delete;
         BaseObservable(const BaseObservable&) = delete;
         ~BaseObservable();
 
-        BaseObservable&         operator=(BaseObservable&&);
+        BaseObservable&         operator=(BaseObservable&&) = delete;
         BaseObservable&         operator=(const BaseObservable&) = delete;
 
         Connection              AddObserver(std::function<void(const EventType&)> callback);
@@ -41,20 +41,6 @@ class Observable : private BaseObservable<EventType>
 
     friend Notifier;
 };
-
-template<typename EventType>
-BaseObservable<EventType>::BaseObservable(BaseObservable&& rhs)
-{
-    std::swap(m_links, rhs.m_links);
-}
-
-template<typename EventType>
-BaseObservable<EventType>& BaseObservable<EventType>::operator=(BaseObservable&& rhs)
-{
-    std::swap(m_links, rhs.m_links);
-
-    return *this;
-}
 
 template<typename EventType>
 Connection BaseObservable<EventType>::AddObserver(std::function<void(const EventType&)> callback)
