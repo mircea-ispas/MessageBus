@@ -64,9 +64,48 @@ void Test_ObservableDeleted()
     assert(connection.IsDetached());
 }
 
+MessageBus message_buss;
+
+struct MyEvent
+{
+    int myProperty;
+};
+
+class MyListener
+{
+    public:
+        MyListener()
+            : myConnection(message_buss.RegisterObserver(this, &MyListener::OnMyEvent))
+        {
+        }
+
+    private:
+        void OnMyEvent(const MyEvent& event)
+        {
+            std::cout<<"MyEvent: "<<event.myProperty<<std::endl;
+        }
+
+    private:
+        Connection myConnection;
+};
+
+void Test_MessageBus()
+{
+    {
+        MyListener listener;
+
+        message_buss.PostMessage(MyEvent{1});
+        message_buss.PostMessage(MyEvent{2});
+        message_buss.PostMessage(MyEvent{3});
+    }
+
+    message_buss.PostMessage(MyEvent{4});
+}
+
 int main(int argc, const char * argv[])
 {
     Test_ObserverGetsNotified();
     Test_ConnectionClose();
     Test_ObservableDeleted();
+    Test_MessageBus();
 }
